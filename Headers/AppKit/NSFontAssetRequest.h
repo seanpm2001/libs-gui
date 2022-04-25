@@ -43,6 +43,7 @@ enum {
 };
 typedef NSUInteger NSFontAssetRequestOptions;
 
+APPKIT_EXPORT_CLASS
 @interface NSFontAssetRequest : NSObject <NSProgressReporting>
 
 - (instancetype) initWithFontDescriptors: (NSArray *)fontDescriptors
