@@ -1228,6 +1228,8 @@ APPKIT_EXPORT_CLASS
 
 - (float) resizebarHeight;
 
+- (float) resizebarNotchWidth;
+
 - (float) titlebarButtonSize;
 
 - (float) titlebarPaddingRight;

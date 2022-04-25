@@ -150,7 +150,9 @@ static NSImage *_pbc_image[5];
 
   if (_menu != nil)
     {
-      [self setMenu:nil];
+      // prevent further actions on the menu
+      _pbcFlags.usesItemFromMenu = NO;
+      [self setMenu: nil];
     }
   _selectedItem = nil;
   [super dealloc];
@@ -175,6 +177,12 @@ static NSImage *_pbc_image[5];
       [nc removeObserver: self
                     name: nil
                   object: _menu];
+    }
+  if (_selectedItem != nil)
+    {
+      // _selectedItem may be dead after the following ASSIGN statement,
+      // so make sure we leave no dangling pointer behind.
+      _selectedItem = nil;
     }
   ASSIGN(_menu, menu);
   if (_menu != nil)
@@ -202,8 +210,9 @@ static NSImage *_pbc_image[5];
       [self setMenuView: nil];
     }
   
-  // FIXME: Select the first or last item?
-  [self selectItemAtIndex: [_menu numberOfItems] - 1];
+  // Select the first item because that is the only selection that makes
+  // sense for pull downs.
+  [self selectItemAtIndex: [_menu numberOfItems] > 0 ? 0 : - 1];
   [self synchronizeTitleAndSelectedItem];
 }
 
@@ -324,13 +333,16 @@ static NSImage *_pbc_image[5];
 {
   id <NSMenuItem> selectedItem = [self selectedItem];
 
-  if (flag)
+  if (!_pbcFlags.pullsDown)
     {
-      [selectedItem setState: NSOnState];
-    }
-  else
-    {
-      [selectedItem setState: NSOffState];
+      if (flag)
+	{
+	  [selectedItem setState: NSOnState];
+	}
+      else
+	{
+	  [selectedItem setState: NSOffState];
+	}
     }
 
   _pbcFlags.altersStateOfSelectedItem = flag;
@@ -665,7 +677,7 @@ static NSImage *_pbc_image[5];
 
   if (_selectedItem != nil)
     {
-      if (_pbcFlags.altersStateOfSelectedItem)
+      if (!_pbcFlags.pullsDown && _pbcFlags.altersStateOfSelectedItem)
         {
           [_selectedItem setState: NSOffState];
         }
@@ -682,7 +694,7 @@ static NSImage *_pbc_image[5];
 
   if (_selectedItem != nil)
     {
-      if (_pbcFlags.altersStateOfSelectedItem)
+      if (!_pbcFlags.pullsDown && _pbcFlags.altersStateOfSelectedItem)
         {
           [_selectedItem setState: NSOnState];
         }

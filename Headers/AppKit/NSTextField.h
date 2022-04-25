@@ -92,6 +92,10 @@ APPKIT_EXPORT_CLASS
 - (void)setDrawsBackground:(BOOL)flag;
 - (void)setTextColor:(NSColor *)aColor;
 - (NSColor *)textColor;
+- (void) setPlaceholderString: (NSString *)string;
+- (NSString *) placeholderString;
+- (void) setPlaceholderAttributedString: (NSAttributedString *)string;
+- (NSAttributedString *) placeholderAttributedString;
 
 //
 // Target and Action 

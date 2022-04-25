@@ -31,6 +31,7 @@
 */ 
 
 #import "config.h"
+
 #import <Foundation/NSArray.h>
 #import <Foundation/NSBundle.h>
 #import <Foundation/NSDebug.h>
@@ -39,6 +40,7 @@
 #import <Foundation/NSString.h>
 #import <Foundation/NSURL.h>
 #import <Foundation/NSUserDefaults.h>
+
 #import "AppKit/NSNib.h"
 #import "AppKit/NSNibLoading.h"
 #import "GNUstepGUI/GSModelLoaderFactory.h"
@@ -175,7 +177,10 @@
       if (success && topLevelObjects && [table objectForKey: NSNibTopLevelObjects])
         {
           *topLevelObjects = [table objectForKey: NSNibTopLevelObjects];
-          for (NSObject *obj in *topLevelObjects)
+          NSEnumerator *en = [*topLevelObjects objectEnumerator];
+          id obj = nil;
+          
+          while ((obj = [en nextObject]) != nil)
             {
               AUTORELEASE(obj);
             }
